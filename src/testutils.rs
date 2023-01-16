@@ -27,7 +27,7 @@ impl Token {
         }
     }
 
-    pub fn initialize(&self, admin: &Identifier, decimals: u32, name: &str, symbol: &str) {
+    pub fn initialize(&self, admin: &Identifier, name: &str, symbol: &str) {
         let name: Bytes = name.into_val(&self.env);
         let symbol: Bytes = symbol.into_val(&self.env);
         NonFungibleTokenClient::new(&self.env, &self.contract_id).initialize(admin, &name, &symbol);
@@ -60,7 +60,7 @@ impl Token {
         NonFungibleTokenClient::new(&self.env, &self.contract_id).xfer(&auth, &nonce, to, amount)
     }
 
-    pub fn xfer_from(&self, spender: &Keypair, from: &Identifier, to: &Identifier, amount: &i128) {
+    pub fn xfer_from(&self, spender: &Keypair, from: &Identifier, to: &Identifier, id: &i128) {
         let spender_id = to_ed25519(&self.env, spender);
         let nonce = self.nonce(&spender_id);
 
@@ -68,7 +68,7 @@ impl Token {
             name: symbol!("xfer_from"),
             contract: self.contract_id.clone(),
             network: self.env.ledger().network_passphrase(),
-            args: (spender_id, &nonce, from, to, amount).into_val(&self.env),
+            args: (spender_id, &nonce, from, to, id).into_val(&self.env),
         });
 
         let auth = Signature::Ed25519(Ed25519Signature {
@@ -77,7 +77,7 @@ impl Token {
         });
 
         NonFungibleTokenClient::new(&self.env, &self.contract_id)
-            .xfer_from(&auth, &nonce, from, to, amount)
+            .xfer_from(&from, &auth, &nonce, id)
     }
 
     pub fn burn(&self, from: &Keypair, amount: &i128) {

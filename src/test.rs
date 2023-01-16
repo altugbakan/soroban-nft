@@ -28,7 +28,7 @@ fn test() {
     let user3 = generate_keypair();
     let user3_id = to_ed25519(&e, &user3);
 
-    token.initialize(&admin1_id, 7, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -66,7 +66,7 @@ fn test_burn() {
     let user2 = generate_keypair();
     let user2_id = to_ed25519(&e, &user2);
 
-    token.initialize(&admin1_id, 7, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -91,7 +91,7 @@ fn xfer_insufficient_balance() {
     let user1_id = to_ed25519(&e, &user1);
     let user2_id = to_ed25519(&e, &user2);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -114,7 +114,7 @@ fn xfer_receive_deauthorized() {
     let user1_id = to_ed25519(&e, &user1);
     let user2_id = to_ed25519(&e, &user2);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -135,7 +135,7 @@ fn xfer_spend_deauthorized() {
     let user1_id = to_ed25519(&e, &user1);
     let user2_id = to_ed25519(&e, &user2);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -158,7 +158,7 @@ fn xfer_from_insufficient_allowance() {
     let user2_id = to_ed25519(&e, &user2);
     let user3_id = to_ed25519(&e, &user3);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     token.mint(&admin1, &user1_id, &1000);
     assert_eq!(token.balance(&user1_id), 1000);
@@ -177,8 +177,8 @@ fn initialize_already_initialized() {
     let admin1 = generate_keypair();
     let admin1_id = to_ed25519(&e, &admin1);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 }
 
 #[test]
@@ -193,7 +193,7 @@ fn set_admin_bad_signature() {
     let admin1_id = to_ed25519(&e, &admin1);
     let admin2_id = to_ed25519(&e, &admin2);
 
-    token.initialize(&admin1_id, 10, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 
     let mut signature = [0u8; 64];
     thread_rng().fill_bytes(&mut signature);
@@ -218,5 +218,5 @@ fn decimal_is_over_max() {
     let admin1 = generate_keypair();
     let admin1_id = to_ed25519(&e, &admin1);
 
-    token.initialize(&admin1_id, u32::from(u8::MAX) + 1, "name", "symbol");
+    token.initialize(&admin1_id, "name", "symbol");
 }

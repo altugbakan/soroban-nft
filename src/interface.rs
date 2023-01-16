@@ -44,6 +44,7 @@ pub trait NonFungibleTokenTrait {
     fn appr(
         env: soroban_sdk::Env,
         owner: soroban_auth::Signature,
+        nonce: i128,
         operator: soroban_auth::Identifier,
         id: i128,
     );
@@ -53,6 +54,7 @@ pub trait NonFungibleTokenTrait {
     fn appr_all(
         env: soroban_sdk::Env,
         owner: soroban_auth::Signature,
+        nonce: i128,
         operator: soroban_auth::Identifier,
         approved: bool,
     );
@@ -87,10 +89,9 @@ pub trait NonFungibleTokenTrait {
     /// Emit event with topics = ["transfer", from: Identifier, to: Identifier], data = [id: i128]
     fn xfer_from(
         env: soroban_sdk::Env,
-        spender: soroban_auth::Signature,
-        nonce: i128,
         from: soroban_auth::Identifier,
-        to: soroban_auth::Identifier,
+        to: soroban_auth::Signature,
+        nonce: i128,
         id: i128,
     );
 
@@ -104,9 +105,9 @@ pub trait NonFungibleTokenTrait {
         id: i128,
     );
 
-    /// If "from" is the administrator or the token owner, burn token "id".
+    /// If "admin" is the administrator or the token owner, burn token "id" from "from".
     /// Emit event with topics = ["burn", from: Identifier], data = [id: i128]
-    fn burn(env: soroban_sdk::Env, from: soroban_auth::Signature, nonce: i128, id: i128);
+    fn burn(env: soroban_sdk::Env, admin: soroban_auth::Signature, nonce: i128, id: i128);
 
     // --------------------------------------------------------------------------------
     // Implementation Interface
@@ -120,4 +121,31 @@ pub trait NonFungibleTokenTrait {
         name: soroban_sdk::Bytes,
         symbol: soroban_sdk::Bytes,
     );
+}
+
+pub enum WriteType {
+    Add,
+    Remove,
+}
+
+pub enum NftURIs {
+    Pug,
+    ShibaInu,
+    StBernard,
+}
+
+impl NftURIs {
+    pub fn value(&self) -> &str {
+        match *self {
+            NftURIs::Pug => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/pug.png"
+            }
+            NftURIs::ShibaInu => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/shiba-inu.png"
+            }
+            NftURIs::StBernard => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/st-bernard.png"
+            }
+        }
+    }
 }
