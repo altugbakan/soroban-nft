@@ -15,9 +15,6 @@ use soroban_auth::{Identifier, Signature};
 use soroban_sdk::{contractimpl, symbol, Bytes, Env};
 
 pub struct NonFungibleToken;
-mod token {
-    soroban_sdk::contractimport!(file = "./soroban_token_spec.wasm");
-}
 
 fn read_nonce(env: &Env, id: &Identifier) -> i128 {
     let key = DataKey::Nonce(id.clone());
