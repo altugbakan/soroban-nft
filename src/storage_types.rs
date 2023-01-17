@@ -27,4 +27,5 @@ pub enum DataKey {
     URI(i128),
     Approval(ApprovalKey),
     Owner(i128),
+    Supply,
 }

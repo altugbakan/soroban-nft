@@ -1,4 +1,4 @@
-use crate::storage_types::DataKey;
+use crate::{interface::NftURIs, storage_types::DataKey};
 use soroban_sdk::{Bytes, Env};
 
 pub fn read_name(env: &Env) -> Bytes {
@@ -29,4 +29,20 @@ pub fn read_token_uri(env: &Env, id: i128) -> Bytes {
 pub fn write_token_uri(env: &Env, id: i128, uri: Bytes) {
     let key = DataKey::URI(id);
     env.storage().set(key, uri)
+}
+
+pub fn get_rand_uri(env: &Env) -> Bytes {
+    to_bytes(
+        &env,
+        match env.ledger().timestamp() % 3 {
+            0 => NftURIs::Pug.value(),
+            1 => NftURIs::ShibaInu.value(),
+            2 => NftURIs::StBernard.value(),
+            _ => panic!("impossible"),
+        },
+    )
+}
+
+pub fn to_bytes(env: &Env, value: &str) -> Bytes {
+    Bytes::from_slice(&env, value.as_bytes())
 }

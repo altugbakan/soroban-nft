@@ -8,7 +8,10 @@ pub fn zero_address(env: &Env) -> Identifier {
 
 pub fn read_owner(env: &Env, id: i128) -> Identifier {
     let key = DataKey::Owner(id);
-    env.storage().get_unchecked(key).unwrap()
+    match env.storage().get(key) {
+        Some(balance) => balance.unwrap(),
+        None => zero_address(&env),
+    }
 }
 
 pub fn write_owner(env: &Env, id: i128, owner: Identifier) {
@@ -17,7 +20,9 @@ pub fn write_owner(env: &Env, id: i128, owner: Identifier) {
 }
 
 pub fn check_owner(env: &Env, auth: &Identifier, id: i128) {
-    if auth != &read_owner(env, id) {
-        panic!("not the owner for token {}", id)
-    }
+    assert!(
+        auth == &read_owner(env, id),
+        "not the owner for token {}",
+        id
+    );
 }

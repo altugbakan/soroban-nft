@@ -4,10 +4,9 @@ use soroban_sdk::Env;
 
 pub fn read_balance(env: &Env, owner: Identifier) -> i128 {
     let key = DataKey::Balance(owner);
-    if let Some(balance) = env.storage().get(key) {
-        balance.unwrap()
-    } else {
-        0
+    match env.storage().get(key) {
+        Some(balance) => balance.unwrap(),
+        None => 0,
     }
 }
 
@@ -19,4 +18,34 @@ pub fn write_balance(env: &Env, owner: Identifier, write_type: WriteType) {
         WriteType::Add => env.storage().set(key, balance + 1),
         WriteType::Remove => env.storage().set(key, balance - 1),
     }
+}
+
+pub fn read_supply(env: &Env) -> i128 {
+    let key = DataKey::Supply;
+    match env.storage().get(key) {
+        Some(balance) => balance.unwrap(),
+        None => 0,
+    }
+}
+
+pub fn increment_supply(env: &Env) {
+    let key = DataKey::Supply;
+    env.storage().set(key, read_supply(&env) + 1);
+}
+
+pub fn read_minted(env: &Env, owner: Identifier) -> bool {
+    let key = DataKey::Balance(owner);
+    match env.storage().get(key) {
+        Some(minted) => minted.unwrap(),
+        None => false,
+    }
+}
+
+pub fn write_minted(env: &Env, owner: Identifier) {
+    let key = DataKey::Balance(owner);
+    env.storage().set(key, true);
+}
+
+pub fn check_minted(env: &Env, owner: Identifier) {
+    assert!(!read_minted(&env, owner), "already minted");
 }

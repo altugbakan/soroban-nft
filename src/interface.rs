@@ -89,14 +89,15 @@ pub trait NonFungibleTokenTrait {
     /// Emit event with topics = ["transfer", from: Identifier, to: Identifier], data = [id: i128]
     fn xfer_from(
         env: soroban_sdk::Env,
+        spender: soroban_auth::Signature,
         from: soroban_auth::Identifier,
-        to: soroban_auth::Signature,
+        to: soroban_auth::Identifier,
         nonce: i128,
         id: i128,
     );
 
     /// If "admin" is the administrator, mint token "id" to "to".
-    /// Emit event with topics = ["mint", admin: Identifier, to: Identifier], data = [id: i128]
+    /// Emit event with topics = ["mint", to: Identifier], data = [id: i128]
     fn mint(
         env: soroban_sdk::Env,
         admin: soroban_auth::Signature,
@@ -104,6 +105,10 @@ pub trait NonFungibleTokenTrait {
         to: soroban_auth::Identifier,
         id: i128,
     );
+
+    /// Mint the next token to "to" for demonstration.
+    /// Emit event with topics = ["mint", to: Identifier], data = [id: i128]
+    fn mint_next(env: soroban_sdk::Env, to: soroban_auth::Signature);
 
     /// If "admin" is the administrator or the token owner, burn token "id" from "from".
     /// Emit event with topics = ["burn", from: Identifier], data = [id: i128]

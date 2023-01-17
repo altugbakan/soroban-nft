@@ -1,10 +1,12 @@
 use crate::admin::{check_admin, has_administrator, read_administrator, write_administrator};
 use crate::approval::{read_approval, read_approval_all, write_approval, write_approval_all};
-use crate::balance::{read_balance, write_balance};
+use crate::balance::{
+    check_minted, increment_supply, read_balance, read_supply, write_balance, write_minted,
+};
 use crate::event;
-use crate::interface::{NftURIs, NonFungibleTokenTrait, WriteType};
+use crate::interface::{NonFungibleTokenTrait, WriteType};
 use crate::metadata::{
-    read_name, read_symbol, read_token_uri, write_name, write_symbol, write_token_uri,
+    get_rand_uri, read_name, read_symbol, read_token_uri, write_name, write_symbol, write_token_uri,
 };
 use crate::owner::{check_owner, read_owner, write_owner, zero_address};
 use crate::storage_types::DataKey;
@@ -17,12 +19,12 @@ mod token {
     soroban_sdk::contractimport!(file = "./soroban_token_spec.wasm");
 }
 
-fn read_nonce(e: &Env, id: &Identifier) -> i128 {
+fn read_nonce(env: &Env, id: &Identifier) -> i128 {
     let key = DataKey::Nonce(id.clone());
-    e.storage().get(key).unwrap_or(Ok(0)).unwrap()
+    env.storage().get(key).unwrap_or(Ok(0)).unwrap()
 }
 
-fn verify_and_consume_nonce(e: &Env, auth: &Signature, expected_nonce: i128) {
+fn verify_and_consume_nonce(env: &Env, auth: &Signature, expected_nonce: i128) {
     match auth {
         Signature::Invoker => {
             if expected_nonce != 0 {
@@ -33,22 +35,19 @@ fn verify_and_consume_nonce(e: &Env, auth: &Signature, expected_nonce: i128) {
         _ => {}
     }
 
-    let id = auth.identifier(e);
+    let id = auth.identifier(env);
     let key = DataKey::Nonce(id.clone());
-    let nonce = read_nonce(e, &id);
+    let nonce = read_nonce(env, &id);
 
-    if nonce != expected_nonce {
-        panic!("incorrect nonce")
-    }
-    e.storage().set(key, &nonce + 1);
+    assert!(nonce == expected_nonce, "incorrect nonce");
+
+    env.storage().set(key, &nonce + 1);
 }
 
 #[contractimpl]
 impl NonFungibleTokenTrait for NonFungibleToken {
     fn initialize(env: Env, admin: Identifier, name: Bytes, symbol: Bytes) {
-        if has_administrator(&env) {
-            panic!("already initialized")
-        }
+        assert!(!has_administrator(&env), "already initialized");
 
         write_administrator(&env, admin);
         write_name(&env, name);
@@ -92,7 +91,6 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         read_token_uri(&env, id)
     }
 
-    /// Allows "operator" to manage token "id" if "owner" is the current owner of token "id".
     fn appr(env: Env, owner: Signature, nonce: i128, operator: Identifier, id: i128) {
         check_owner(&env, &owner.identifier(&env), id);
         verify_and_consume_nonce(&env, &owner, nonce);
@@ -102,7 +100,6 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         event::approve(&env, operator, id);
     }
 
-    /// If "approved", allows "operator" to manage all tokens of "owner"
     fn appr_all(env: Env, owner: Signature, nonce: i128, operator: Identifier, approved: bool) {
         verify_and_consume_nonce(&env, &owner, nonce);
 
@@ -110,28 +107,22 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         event::approve_all(&env, operator, owner.identifier(&env))
     }
 
-    /// Returns the identifier approved for token "id".
     fn get_appr(env: Env, id: i128) -> Identifier {
         read_approval(&env, id)
     }
 
-    /// If "operator" is allowed to manage assets of "owner", return true.
     fn is_appr(env: Env, owner: Identifier, operator: Identifier) -> bool {
         read_approval_all(&env, owner, operator)
     }
 
-    /// Get the amount of tokens that "owner" has.
     fn balance(env: Env, owner: Identifier) -> i128 {
         read_balance(&env, owner)
     }
 
-    /// Get the owner of "id" token.
     fn owner(env: Env, id: i128) -> Identifier {
         read_owner(&env, id)
     }
 
-    /// Transfer token "id" from "from" to "to.
-    /// Emit event with topics = ["transfer", from: Identifier, to: Identifier], data = [id: i128]
     fn xfer(env: Env, from: Signature, nonce: i128, to: Identifier, id: i128) {
         check_owner(&env, &from.identifier(&env), id);
         verify_and_consume_nonce(&env, &from, nonce);
@@ -143,51 +134,64 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         event::transfer(&env, from.identifier(&env), to, id);
     }
 
-    /// Transfer token "id" from "from" to "to", consuming the allowance of "spender".
-    /// Emit event with topics = ["transfer", from: Identifier, to: Identifier], data = [id: i128]
-    fn xfer_from(env: Env, from: Identifier, to: Signature, nonce: i128, id: i128) {
+    fn xfer_from(
+        env: Env,
+        spender: Signature,
+        from: Identifier,
+        to: Identifier,
+        nonce: i128,
+        id: i128,
+    ) {
         check_owner(&env, &from, id);
-        verify_and_consume_nonce(&env, &to, nonce);
+        verify_and_consume_nonce(&env, &spender, nonce);
 
-        if to.identifier(&env) == read_approval(&env, id)
-            || read_approval_all(&env, from.clone(), to.identifier(&env))
+        if spender.identifier(&env) == read_approval(&env, id)
+            || read_approval_all(&env, from.clone(), spender.identifier(&env))
         {
             write_approval(&env, id, zero_address(&env));
 
-            write_owner(&env, id, to.identifier(&env));
+            write_owner(&env, id, to.clone());
             write_balance(&env, from.clone(), WriteType::Remove);
-            write_balance(&env, to.identifier(&env), WriteType::Add);
+            write_balance(&env, to.clone(), WriteType::Add);
 
-            event::transfer(&env, from, to.identifier(&env), id);
+            event::transfer(&env, from, to, id);
         } else {
             panic!("not approved")
         }
     }
 
-    /// If "admin" is the administrator, mint token "id" to "to".
-    /// Emit event with topics = ["mint", admin: Identifier, to: Identifier], data = [id: i128]
-    fn mint(env: Env, _admin: Signature, _nonce: i128, to: Identifier, id: i128) {
-        // For this demo, let anyone mint.
-        // check_admin(&env, &admin);
-        // verify_and_consume_nonce(&env, &admin, nonce);
+    fn mint(env: Env, admin: Signature, nonce: i128, to: Identifier, id: i128) {
+        check_admin(&env, &admin);
+        verify_and_consume_nonce(&env, &admin, nonce);
 
         write_balance(&env, to.clone(), WriteType::Add);
+        write_owner(&env, id, to.clone());
+        increment_supply(&env);
 
         // Create psuedo randomness.
-        let uri = match env.ledger().timestamp() % 3 {
-            0 => NftURIs::Pug.value(),
-            1 => NftURIs::ShibaInu.value(),
-            2 => NftURIs::StBernard.value(),
-            _ => panic!("impossible"),
-        };
-
-        write_token_uri(&env, id, Bytes::from_slice(&env, uri.as_bytes()));
+        let uri = get_rand_uri(&env);
+        write_token_uri(&env, id, uri);
 
         event::mint(&env, to, id)
     }
 
-    /// If "from" is the administrator or the token owner, burn token "id" from "from".
-    /// Emit event with topics = ["burn", from: Identifier], data = [id: i128]
+    fn mint_next(env: Env, to: Signature) {
+        check_minted(&env, to.identifier(&env));
+
+        let next_id = read_supply(&env) + 1;
+
+        write_balance(&env, to.identifier(&env), WriteType::Add);
+        write_owner(&env, next_id, to.identifier(&env));
+        increment_supply(&env);
+        write_minted(&env, to.identifier(&env));
+
+        // Create psuedo randomness.
+        let uri = get_rand_uri(&env);
+        write_token_uri(&env, next_id, uri);
+
+        event::mint(&env, to.identifier(&env), next_id)
+    }
+
     fn burn(env: Env, admin: Signature, nonce: i128, id: i128) {
         check_admin(&env, &admin);
         verify_and_consume_nonce(&env, &admin, nonce);
