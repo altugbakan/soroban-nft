@@ -10,6 +10,6 @@ mod metadata;
 mod owner;
 mod storage_types;
 mod test;
-pub mod testutils;
+mod testutils;
 
 pub use crate::contract::NonFungibleTokenClient;

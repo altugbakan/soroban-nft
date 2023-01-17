@@ -6,8 +6,8 @@ use soroban_auth::{Ed25519Signature, Identifier, Signature, SignaturePayload, Si
 use soroban_sdk::testutils::ed25519::Sign;
 use soroban_sdk::{symbol, Bytes, BytesN, Env, IntoVal};
 
-const TOKEN_NAME: &str = "Non Fungible Dogs";
-const TOKEN_ID: &str = "NFD";
+pub const TOKEN_NAME: &str = "Non Fungible Dogs";
+pub const TOKEN_SYMBOL: &str = "NFD";
 
 pub fn register_contract(e: &Env) -> BytesN<32> {
     e.register_contract(None, NonFungibleToken {})
@@ -39,7 +39,7 @@ impl Token {
 
     pub fn initialize(&self, admin: &Identifier) {
         let name: Bytes = TOKEN_NAME.into_val(&self.env);
-        let symbol: Bytes = TOKEN_ID.into_val(&self.env);
+        let symbol: Bytes = TOKEN_SYMBOL.into_val(&self.env);
         NonFungibleTokenClient::new(&self.env, &self.contract_id).initialize(admin, &name, &symbol);
     }
 

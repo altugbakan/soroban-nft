@@ -1,9 +1,8 @@
 #![cfg(test)]
-
 use crate::interface::NftURIs;
 use crate::metadata::to_bytes;
 use crate::owner::zero_address;
-use crate::testutils::{to_ed25519, Token};
+use crate::testutils::{to_ed25519, Token, TOKEN_NAME, TOKEN_SYMBOL};
 use ed25519_dalek::Keypair;
 use rand::thread_rng;
 
@@ -21,6 +20,8 @@ fn test_mint() {
     let user_id = to_ed25519(&env, &user);
 
     token.initialize(&admin_id);
+    assert_eq!(token.name(), to_bytes(&env, TOKEN_NAME));
+    assert_eq!(token.symbol(), to_bytes(&env, TOKEN_SYMBOL));
 
     token.mint(&admin, &user_id, &1);
     assert_eq!(token.balance(&user_id), 1);
