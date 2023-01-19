@@ -20,7 +20,7 @@ pub enum ApprovalKey {
 pub enum DataKey {
     Balance(Identifier),
     Nonce(Identifier),
-    Minted(i128),
+    Minted(Identifier),
     Admin,
     Name,
     Symbol,

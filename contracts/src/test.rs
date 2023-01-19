@@ -5,6 +5,7 @@ use crate::owner::zero_address;
 use crate::testutils::{to_ed25519, Token, TOKEN_NAME, TOKEN_SYMBOL};
 use ed25519_dalek::Keypair;
 use rand::thread_rng;
+use soroban_sdk::testutils::Accounts;
 
 fn generate_keypair() -> Keypair {
     Keypair::generate(&mut thread_rng())
@@ -43,7 +44,46 @@ fn test_mint() {
 }
 
 #[test]
-fn test_burn_admin() {
+fn test_mint_next() {
+    let (env, token) = Token::create();
+
+    let admin = generate_keypair();
+    let admin_id = to_ed25519(&env, &admin);
+
+    token.initialize(&admin_id);
+
+    let user1 = env.accounts().generate();
+    token.mint_next(&user1);
+    assert_eq!(token.balance(&(&user1).into()), 1);
+    assert_eq!(token.owner(&1), (&user1).into());
+
+    let user2 = env.accounts().generate();
+    token.mint_next(&user2);
+    assert_eq!(token.balance(&(&user2).into()), 1);
+    assert_eq!(token.owner(&2), (&user2).into());
+}
+
+#[test]
+#[should_panic(expected = "already minted")]
+fn test_mint_next_twice() {
+    let (env, token) = Token::create();
+
+    let admin = generate_keypair();
+    let admin_id = to_ed25519(&env, &admin);
+
+    token.initialize(&admin_id);
+
+    let user1 = env.accounts().generate();
+    token.mint_next(&user1);
+    assert_eq!(token.balance(&(&user1).into()), 1);
+    assert_eq!(token.owner(&1), (&user1).into());
+
+    token.mint_next(&user1);
+    token.mint_next(&user1);
+}
+
+#[test]
+fn test_burn() {
     let (env, token) = Token::create();
 
     let admin = generate_keypair();

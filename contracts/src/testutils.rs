@@ -4,13 +4,13 @@ use crate::contract::{NonFungibleToken, NonFungibleTokenClient};
 use ed25519_dalek::Keypair;
 use soroban_auth::{Ed25519Signature, Identifier, Signature, SignaturePayload, SignaturePayloadV0};
 use soroban_sdk::testutils::ed25519::Sign;
-use soroban_sdk::{symbol, Bytes, BytesN, Env, IntoVal};
+use soroban_sdk::{symbol, AccountId, Bytes, BytesN, Env, IntoVal};
 
 pub const TOKEN_NAME: &str = "Non Fungible Dogs";
 pub const TOKEN_SYMBOL: &str = "NFD";
 
-pub fn register_contract(e: &Env) -> BytesN<32> {
-    e.register_contract(None, NonFungibleToken {})
+pub fn register_contract(env: &Env) -> BytesN<32> {
+    env.register_contract(None, NonFungibleToken {})
 }
 
 pub fn to_ed25519(env: &Env, kp: &Keypair) -> Identifier {
@@ -83,7 +83,7 @@ impl Token {
             signature: owner.sign(msg).unwrap().into_val(&self.env),
         });
 
-        NonFungibleTokenClient::new(&self.env, &self.contract_id).appr(&auth, &nonce, operator, id)
+        NonFungibleTokenClient::new(&self.env, &self.contract_id).appr(&auth, &nonce, operator, id);
     }
 
     pub fn appr_all(&self, owner: &Keypair, operator: &Identifier) {
@@ -103,7 +103,7 @@ impl Token {
         });
 
         NonFungibleTokenClient::new(&self.env, &self.contract_id)
-            .appr_all(&auth, &nonce, operator, &true)
+            .appr_all(&auth, &nonce, operator, &true);
     }
 
     pub fn xfer(&self, from: &Keypair, to: &Identifier, id: &i128) {
@@ -122,7 +122,7 @@ impl Token {
             signature: from.sign(msg).unwrap().into_val(&self.env),
         });
 
-        NonFungibleTokenClient::new(&self.env, &self.contract_id).xfer(&auth, &nonce, to, id)
+        NonFungibleTokenClient::new(&self.env, &self.contract_id).xfer(&auth, &nonce, to, id);
     }
 
     pub fn xfer_from(&self, spender: &Keypair, from: &Identifier, to: &Identifier, id: &i128) {
@@ -142,7 +142,7 @@ impl Token {
         });
 
         NonFungibleTokenClient::new(&self.env, &self.contract_id)
-            .xfer_from(&auth, &from, &to, &nonce, id)
+            .xfer_from(&auth, &from, &to, &nonce, id);
     }
 
     pub fn mint(&self, admin: &Keypair, to: &Identifier, id: &i128) {
@@ -159,7 +159,13 @@ impl Token {
             public_key: admin.public.to_bytes().into_val(&self.env),
             signature: admin.sign(msg).unwrap().into_val(&self.env),
         });
-        NonFungibleTokenClient::new(&self.env, &self.contract_id).mint(&auth, &nonce, to, id)
+        NonFungibleTokenClient::new(&self.env, &self.contract_id).mint(&auth, &nonce, to, id);
+    }
+
+    pub fn mint_next(&self, source_account: &AccountId) {
+        NonFungibleTokenClient::new(&self.env, &self.contract_id)
+            .with_source_account(source_account)
+            .mint_next();
     }
 
     pub fn burn(&self, admin: &Keypair, id: &i128) {
@@ -178,7 +184,7 @@ impl Token {
             signature: admin.sign(msg).unwrap().into_val(&self.env),
         });
 
-        NonFungibleTokenClient::new(&self.env, &self.contract_id).burn(&auth, &nonce, id)
+        NonFungibleTokenClient::new(&self.env, &self.contract_id).burn(&auth, &nonce, id);
     }
 
     pub fn set_admin(&self, admin: &Keypair, new_admin: &Identifier) {
@@ -196,7 +202,7 @@ impl Token {
             signature: admin.sign(msg).unwrap().into_val(&self.env),
         });
         NonFungibleTokenClient::new(&self.env, &self.contract_id)
-            .set_admin(&auth, &nonce, new_admin)
+            .set_admin(&auth, &nonce, new_admin);
     }
 
     pub fn name(&self) -> Bytes {

@@ -108,7 +108,7 @@ pub trait NonFungibleTokenTrait {
 
     /// Mint the next token to "to" for demonstration.
     /// Emit event with topics = ["mint", to: Identifier], data = [id: i128]
-    fn mint_next(env: soroban_sdk::Env, to: soroban_auth::Signature);
+    fn mint_next(env: soroban_sdk::Env);
 
     /// If "admin" is the administrator or the token owner, burn token "id" from "from".
     /// Emit event with topics = ["burn", from: Identifier], data = [id: i128]

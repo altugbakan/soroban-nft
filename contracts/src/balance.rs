@@ -34,7 +34,7 @@ pub fn increment_supply(env: &Env) {
 }
 
 pub fn read_minted(env: &Env, owner: Identifier) -> bool {
-    let key = DataKey::Balance(owner);
+    let key = DataKey::Minted(owner);
     match env.storage().get(key) {
         Some(minted) => minted.unwrap(),
         None => false,
@@ -42,7 +42,7 @@ pub fn read_minted(env: &Env, owner: Identifier) -> bool {
 }
 
 pub fn write_minted(env: &Env, owner: Identifier) {
-    let key = DataKey::Balance(owner);
+    let key = DataKey::Minted(owner);
     env.storage().set(key, true);
 }
 

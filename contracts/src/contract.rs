@@ -172,21 +172,22 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         event::mint(&env, to, id)
     }
 
-    fn mint_next(env: Env, to: Signature) {
-        check_minted(&env, to.identifier(&env));
+    fn mint_next(env: Env) {
+        let to = Identifier::from(env.invoker());
+        check_minted(&env, to.clone());
+        write_minted(&env, to.clone());
 
         let next_id = read_supply(&env) + 1;
 
-        write_balance(&env, to.identifier(&env), WriteType::Add);
-        write_owner(&env, next_id, to.identifier(&env));
+        write_balance(&env, to.clone(), WriteType::Add);
+        write_owner(&env, next_id, to.clone());
         increment_supply(&env);
-        write_minted(&env, to.identifier(&env));
 
         // Create psuedo randomness.
         let uri = get_rand_uri(&env);
         write_token_uri(&env, next_id, uri);
 
-        event::mint(&env, to.identifier(&env), next_id)
+        event::mint(&env, to, next_id)
     }
 
     fn burn(env: Env, admin: Signature, nonce: i128, id: i128) {
