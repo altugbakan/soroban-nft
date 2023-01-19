@@ -134,23 +134,47 @@ pub enum WriteType {
 }
 
 pub enum NftURIs {
-    Pug,
-    ShibaInu,
-    StBernard,
+    Bacon,
+    Bailey,
+    Coco,
+    Frankie,
+    Marley,
+    Noir,
+    Riley,
+    Scout,
+    Shadow,
 }
 
 impl NftURIs {
     pub fn value(&self) -> &str {
         match *self {
-            NftURIs::Pug => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/pug.png"
-            }
-            NftURIs::ShibaInu => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/shiba-inu.png"
-            }
-            NftURIs::StBernard => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/img/st-bernard.png"
-            }
+            NftURIs::Bacon => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/bacon.png"
+            },
+            NftURIs::Bailey => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/bailey.png"
+            },
+            NftURIs::Coco => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/coco.png"
+            },
+            NftURIs::Frankie => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/frankie.png"
+            },
+            NftURIs::Marley => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/marley.png"
+            },
+            NftURIs::Noir => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/noir.png"
+            },
+            NftURIs::Riley => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/riley.png"
+            },
+            NftURIs::Scout => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/scout.png"
+            },
+            NftURIs::Shadow => {
+                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/shadow.png"
+            },
         }
     }
 }

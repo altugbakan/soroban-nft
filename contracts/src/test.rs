@@ -30,9 +30,15 @@ fn test_mint() {
 
     let uri = token.token_uri(&1);
     assert!(
-        uri == to_bytes(&env, NftURIs::Pug.value())
-            || uri == to_bytes(&env, NftURIs::ShibaInu.value())
-            || uri == to_bytes(&env, NftURIs::StBernard.value())
+        uri == to_bytes(&env, NftURIs::Bacon.value())
+            || uri == to_bytes(&env, NftURIs::Bailey.value())
+            || uri == to_bytes(&env, NftURIs::Coco.value())
+            || uri == to_bytes(&env, NftURIs::Frankie.value())
+            || uri == to_bytes(&env, NftURIs::Marley.value())
+            || uri == to_bytes(&env, NftURIs::Noir.value())
+            || uri == to_bytes(&env, NftURIs::Riley.value())
+            || uri == to_bytes(&env, NftURIs::Scout.value())
+            || uri == to_bytes(&env, NftURIs::Shadow.value())
     );
 }
 

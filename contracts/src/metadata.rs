@@ -34,10 +34,16 @@ pub fn write_token_uri(env: &Env, id: i128, uri: Bytes) {
 pub fn get_rand_uri(env: &Env) -> Bytes {
     to_bytes(
         &env,
-        match env.ledger().timestamp() % 3 {
-            0 => NftURIs::Pug.value(),
-            1 => NftURIs::ShibaInu.value(),
-            2 => NftURIs::StBernard.value(),
+        match env.ledger().timestamp() % 9 {
+            0 => NftURIs::Bacon.value(),
+            1 => NftURIs::Bailey.value(),
+            2 => NftURIs::Coco.value(),
+            3 => NftURIs::Frankie.value(),
+            4 => NftURIs::Marley.value(),
+            5 => NftURIs::Noir.value(),
+            6 => NftURIs::Riley.value(),
+            7 => NftURIs::Scout.value(),
+            8 => NftURIs::Shadow.value(),
             _ => panic!("impossible"),
         },
     )
