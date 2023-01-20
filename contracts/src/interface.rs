@@ -148,33 +148,15 @@ pub enum NftURIs {
 impl NftURIs {
     pub fn value(&self) -> &str {
         match *self {
-            NftURIs::Bacon => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/bacon.png"
-            },
-            NftURIs::Bailey => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/bailey.png"
-            },
-            NftURIs::Coco => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/coco.png"
-            },
-            NftURIs::Frankie => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/frankie.png"
-            },
-            NftURIs::Marley => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/marley.png"
-            },
-            NftURIs::Noir => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/noir.png"
-            },
-            NftURIs::Riley => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/riley.png"
-            },
-            NftURIs::Scout => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/scout.png"
-            },
-            NftURIs::Shadow => {
-                "https://raw.githubusercontent.com/altugbakan/soroban-nft/main/contracts/img/shadow.png"
-            },
+            NftURIs::Bacon => "images/bacon.png",
+            NftURIs::Bailey => "images/bailey.png",
+            NftURIs::Coco => "images/coco.png",
+            NftURIs::Frankie => "images/frankie.png",
+            NftURIs::Marley => "images/marley.png",
+            NftURIs::Noir => "images/noir.png",
+            NftURIs::Riley => "images/riley.png",
+            NftURIs::Scout => "images/scout.png",
+            NftURIs::Shadow => "images/shadow.png",
         }
     }
 }

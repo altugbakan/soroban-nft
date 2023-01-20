@@ -1,6 +1,6 @@
 # Soroban artifacts
 contracts/target
-/.soroban
+contracts/.soroban
 
 # Logs
 logs
