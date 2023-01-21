@@ -1,18 +1,33 @@
-import { useState } from "react";
 import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  createStyles,
 } from "@mantine/core";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
-import { SorobanReactProvider } from "@soroban-react/core";
 
-import "./App.css";
-import { NavBar } from "./components/NavBar";
-import { chainMetadataProps } from "./utils/chainMetadata";
+import { NavBar } from "./components/navbar/NavBar";
 import { MainPage } from "./components/MainPage";
+import { WalletProvider } from "./providers/WalletProvider";
+import { Footer } from "./components/footer/Footer";
+
+const useStyles = createStyles({
+  app: {
+    margin: "0 auto",
+    padding: "0",
+    textAlign: "center",
+    minHeight: "100vh",
+    height: "max-content",
+    width: "95vw",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+});
 
 function App() {
+  const { classes } = useStyles();
+
   const preferredColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
@@ -32,12 +47,13 @@ function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <SorobanReactProvider {...chainMetadataProps}>
-          <div className="App">
+        <WalletProvider>
+          <div className={classes.app}>
             <NavBar />
             <MainPage />
+            <Footer />
           </div>
-        </SorobanReactProvider>
+        </WalletProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

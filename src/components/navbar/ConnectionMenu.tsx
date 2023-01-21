@@ -6,12 +6,13 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconChevronDown, IconSun, IconMoon } from "@tabler/icons";
-import ConnectWallet from "./ConnectWallet";
+import WalletButton from "../interface/WalletButton";
 
 const useStyles = createStyles((theme) => ({
   button: {
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
+    width: "140px",
   },
 
   menuControl: {
@@ -24,7 +25,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function WalletButton() {
+export function ConnectionMenu() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { classes, theme } = useStyles();
 
@@ -41,7 +42,7 @@ export function WalletButton() {
 
   return (
     <Group noWrap spacing={0}>
-      <ConnectWallet className={classes.button} />
+      <WalletButton className={classes.button} />
       <Menu transition="pop" position="bottom-end">
         <Menu.Target>
           <ActionIcon

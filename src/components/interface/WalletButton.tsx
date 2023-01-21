@@ -1,12 +1,12 @@
 import { Button } from "@mantine/core";
-import { useSorobanReact } from "@soroban-react/core";
+import { useWalletContext } from "../../hooks/useWalletContext";
 
 interface ConnectWalletProps {
   className: string;
 }
 
-export default function ConnectWallet({ className }: ConnectWalletProps) {
-  const { connect, address } = useSorobanReact();
+export default function WalletButton({ className }: ConnectWalletProps) {
+  const { address, connect } = useWalletContext();
   return (
     <Button
       onClick={async () => !address && (await connect())}

@@ -1,42 +1,52 @@
-import { Button, createStyles } from "@mantine/core";
-import { useAccount } from "../hooks/useAccount";
-import ConnectWallet from "./ConnectWallet";
-
-const useStyles = createStyles(() => ({
-  page: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "20px",
-  },
-  button: {},
-}));
+import { useState } from "react";
+import { useContractValue } from "../hooks/useContractValue";
+import { useWalletContext } from "../hooks/useWalletContext";
+import { CONTRACT_ID } from "../utils/constants";
+import { scValToBigNumber, stringToAccountIdentifier } from "../utils/convert";
+import { InitialPage } from "./pages/InitialPage";
+import { AfterMintPage } from "./pages/AfterMintPage";
+import { BeforeMintPage } from "./pages/BeforeMintPage";
+import { FundPage } from "./pages/FundPage";
 
 export function MainPage() {
-  const account = useAccount();
-  const minted = false;
-  const { classes } = useStyles();
+  const { address, networkDetails, server } = useWalletContext();
+  const [minted, setMinted] = useState<boolean>(false);
+  const [funded, setFunded] = useState<boolean>(false);
 
-  if (!account) {
-    return (
-      <div className={classes.page}>
-        <h1>Soroban NFTs</h1>
-        <p>NFTs on Stellar Chain using Soroban network.</p>
-        <ConnectWallet className={classes.button} />
-      </div>
-    );
+  const handleMinted = () => {
+    setMinted(true);
+  };
+
+  const handleFunded = () => {
+    console.log("funded");
+    setFunded(true);
+  };
+
+  const balance = useContractValue({
+    address: address,
+    contractId: CONTRACT_ID,
+    server,
+    networkPassphrase: networkDetails?.networkPassphrase,
+    func: "balance",
+    params: address ? [stringToAccountIdentifier(address)] : undefined,
+  });
+
+  if (!address || !networkDetails?.network || !server) {
+    return <InitialPage />;
   }
 
-  if (!minted) {
-    return (
-      <div className={classes.page}>
-        <h1>Mint your NFT!</h1>
-        <Button>Mint NFT</Button>
-        <p>Get one of three cute puppies!</p>
-      </div>
-    );
+  if (balance.loading) return <h1>Loading...</h1>;
+
+  if (!funded && !minted && balance.error) {
+    return <FundPage address={address} handleFunded={handleFunded} />;
   }
 
-  return <h1>Connected</h1>;
+  if (!minted && balance.data && scValToBigNumber(balance.data).equals(0)) {
+    return <BeforeMintPage handleMinted={handleMinted} />;
+  }
+
+  if (minted || scValToBigNumber(balance.data).greaterThan(0))
+    return <AfterMintPage />;
+
+  return <BeforeMintPage handleMinted={handleMinted} />;
 }

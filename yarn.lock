@@ -489,6 +489,13 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@mantine/carousel@^5.10.1":
+  version "5.10.1"
+  resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-5.10.1.tgz#10c4f0c103c40d3eecfc8f914dfc07c6fcacd7a1"
+  integrity sha512-TAcWlyy5aY4ikGbxD3kYytg6adwSzARA+pTiv1JxT6kXIzWMD/9Kd0d/4bPKPJx4Jk8uYTH36YH3DHC+IwRvSA==
+  dependencies:
+    "@mantine/utils" "5.10.1"
+
 "@mantine/core@^5.10.1":
   version "5.10.1"
   resolved "https://registry.yarnpkg.com/@mantine/core/-/core-5.10.1.tgz#98cbfbb13493e0d57051f3ddc22777931ca5b35f"
@@ -622,28 +629,6 @@
   integrity sha512-6Tpkq+R6LOlmQb1R5NNETLG0B4YP0wc+klfXafpUCj6JGyaUc8il7/kUZ7m59rGbXGczE9Bs+iz2qloqsZBduQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
-
-"@soroban-react/core@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@soroban-react/core/-/core-3.2.1.tgz#e25840bca76767d79df0d93b89607a8f72d908f3"
-  integrity sha512-zS8M1RoZiq5XveemnNc5QaelO+ackZbPkUkvbovUN+VzRK++Hh4lzIJ0VoVVSJCBIY38+bsql+IL+mfW1uqimA==
-  dependencies:
-    "@soroban-react/freighter" "^3.2.1"
-    "@soroban-react/types" "^3.2.1"
-    soroban-client "^0.3.0"
-
-"@soroban-react/freighter@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@soroban-react/freighter/-/freighter-3.2.1.tgz#ed4bde0e203cd231d6d15fb6140ab488d31b158d"
-  integrity sha512-h0eINFw6BbdQoNIuqEovdyfNs63tWPTHShnFDUQfrZNDSgXjzBNiX1X47ZIQCCAXw7ZUQ74TtCVE3WrqGLWGbA==
-  dependencies:
-    "@soroban-react/types" "^3.2.1"
-    "@stellar/freighter-api" "^1.3.1"
-
-"@soroban-react/types@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@soroban-react/types/-/types-3.2.1.tgz#238bdc45333872363d7a353f2e1a437383428120"
-  integrity sha512-EAocVvvQy1z2W/zsMFJ+NRa9t5MnUKkNgEEM3VSKEVdm0RFB3BoiciZDIxwOhBUWHqoKxbV7g5jynF/cfRlsBA==
 
 "@stellar/freighter-api@^1.3.1":
   version "1.3.1"
@@ -782,6 +767,14 @@ buffer@^5.1.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
+
 callsites@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
@@ -862,6 +855,18 @@ electron-to-chromium@^1.4.251:
   version "1.4.284"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.284.tgz#61046d1e4cab3a25238f6bf7413795270f125592"
   integrity sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==
+
+embla-carousel-react@^7.0.7:
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-7.0.7.tgz#d5a03fd9642b4d711d7ae81ac35cb5acf985bc22"
+  integrity sha512-bm3fgBabS0YDTeaghStoDw1b7flLZwzXenrM5k+fHT6C8RudFmR74fPy3ftUJT3ORHPDQXcS9EjrhNPu3Ao4HA==
+  dependencies:
+    embla-carousel "7.0.7"
+
+embla-carousel@7.0.7:
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-7.0.7.tgz#0fcfd356d36f2e2a00311db406bcb90dad64422e"
+  integrity sha512-eoTCIUWkMQJlm5VTtSJweEwzG3kgnI2lb9omEvK6sDdPFaEaj5I+X505o78F526P+s+NCkvOaX57o7vERXYbxw==
 
 error-ex@^1.3.1:
   version "1.3.2"
@@ -967,7 +972,7 @@ hoist-non-react-statics@^3.3.1:
   dependencies:
     react-is "^16.7.0"
 
-ieee754@^1.1.13:
+ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
