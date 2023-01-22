@@ -28,6 +28,13 @@ const useStyles = createStyles((theme) => ({
       marginTop: theme.spacing.md,
     },
   },
+
+  anchor: {
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    "&:visited": {
+      color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    },
+  },
 }));
 
 export function Footer() {
@@ -38,7 +45,17 @@ export function Footer() {
       <Container className={classes.inner}>
         <Group spacing={4} position="left" noWrap>
           <SorobanLogo />
-          <h4>Created for Hacka-Soroban-Athon</h4>
+          <h4>
+            Created for{" "}
+            <a
+              href="https://devpost.com/software/sorodogs"
+              target="_blank"
+              rel="noreferrer"
+              className={classes.anchor}
+            >
+              Hacka-Soroban-athon
+            </a>
+          </h4>
         </Group>
         <Group spacing={0} className={classes.links} position="right" noWrap>
           <ActionIcon
@@ -50,7 +67,7 @@ export function Footer() {
           <ActionIcon
             size="lg"
             onClick={() =>
-              window.open("https://github.com/altugbakan/", "_blank")
+              window.open("https://github.com/altugbakan/sorodogs/", "_blank")
             }
           >
             <IconBrandGithub size={18} stroke={1.5} />
