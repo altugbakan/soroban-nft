@@ -1,13 +1,13 @@
-# Soroban NFT
+# SoroDogs: NFTs on Stellar using Soroban Platform
 
 <div align="center">
     <a href="https://sorodogs.surge.sh">
-        <img src="https://raw.githubusercontent.com/altugbakan/soroban-nft/main/public/images/bacon.png" alt="Visitor NFTs" width=256px>
+        <img src="public/images/bacon.png" alt="Visitor NFTs" width=256px>
     </a>
     <h3>Contract and Frontend for the SoroDogs NFTs<h3>
     <h3>38303ce284ff09e8ed8e44cb5263d5fa4cfc1fa155c0724e54e3d258ddb1bd09 on Soroban Futurenet</h3>
     <br />
-    <h3>Built for <a href="https://hacka-soroban-athon.devpost.com/?ref_feature=challenge&ref_medium=homepage-recommended-hackathons">Hacka-soroban-athon 2023</a></h3>
+    <h3>Built for <a href="https://hacka-soroban-athon.devpost.com/">Hacka-Soroban-athon 2023</a></h3>
 </div>
 <br />
 
@@ -31,8 +31,8 @@ The frontend is built using [TypeScript](https://www.typescriptlang.org/), [Reac
 1. Clone or Fork this repository
 
 ```bash
-git clone https://github.com/altugbakan/soroban-nft
-cd soroban-nft
+git clone https://github.com/altugbakan/sorodogs
+cd sorodogs
 ```
 
 2. Install dependencies
